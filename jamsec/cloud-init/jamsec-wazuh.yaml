@@ -1,0 +1,42 @@
+#cloud-config
+# ============================================================================
+#  jamsec-wazuh — SIEM del SOC de JAMSEC (Wazuh all-in-one)
+#  Debian 13.
+#    net0 vmbr10 -> SOC      10.20.10.20/24  gw 10.20.10.1 (salida internet)
+#    net1 vmbr0  -> tránsito 172.20.17.231/24 (sin gw; para que los agentes
+#                  del cliente Apex alcancen el manager)
+#  La instalación de Wazuh (pesada) se hace por SSH tras el arranque.
+# ============================================================================
+hostname: jamsec-wazuh
+fqdn: jamsec-wazuh.jamsec.cat
+manage_etc_hosts: true
+
+users:
+  - name: jamsec
+    groups: [sudo]
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    shell: /bin/bash
+    lock_passwd: false
+    plain_text_passwd: Jamsec2026!
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHJrzrkaIbwLspktR5Xg/s/nwWklhrQXUqp1vbZgWyYU admin@debian-server
+ssh_pwauth: true
+
+package_update: true
+packages:
+  - curl
+  - qemu-guest-agent
+  - bind9-dnsutils
+
+write_files:
+  - path: /etc/sysctl.d/99-wazuh.conf
+    permissions: '0644'
+    content: |
+      # Requisito del indexer de Wazuh (OpenSearch)
+      vm.max_map_count = 262144
+
+runcmd:
+  - sysctl --system
+  - systemctl enable --now qemu-guest-agent
+
+final_message: "jamsec-wazuh base lista tras $UPTIME segundos"

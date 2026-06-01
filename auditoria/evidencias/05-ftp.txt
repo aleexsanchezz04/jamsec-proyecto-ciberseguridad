@@ -1,0 +1,22 @@
+Connected to 172.20.17.230.
+220 (vsFTPd 3.0.5)
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+229 Entering Extended Passive Mode (|||30040|)
+150 Here comes the directory listing.
+-rw-r--r--    1 0        0             223 Jun 01 15:27 backup_apexgestoria.sql
+-rw-r--r--    1 0        0             271 Jun 01 15:27 credencials.txt
+drwxrwxrwx    2 103      105          4096 Jun 01 15:28 incoming
+226 Directory send OK.
+local: /home/jamsec/auditoria/ftp-credencials.txt remote: credencials.txt
+229 Entering Extended Passive Mode (|||30052|)
+150 Opening BINARY mode data connection for credencials.txt (271 bytes).
+226 Transfer complete.
+271 bytes received in 00:00 (156.68 KiB/s)
+local: /home/jamsec/auditoria/ftp-backup.sql remote: backup_apexgestoria.sql
+229 Entering Extended Passive Mode (|||30060|)
+150 Opening BINARY mode data connection for backup_apexgestoria.sql (223 bytes).
+226 Transfer complete.
+223 bytes received in 00:00 (171.20 KiB/s)
+221 Goodbye.

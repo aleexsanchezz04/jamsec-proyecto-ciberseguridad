@@ -1,0 +1,21 @@
+﻿ 15:50:12 up 19 days, 41 min,  3 users,  load average: 0.28, 0.19, 0.11
+---
+               total        used        free      shared  buff/cache   available
+Mem:           117Gi       4.8Gi       113Gi        51Mi       1.0Gi       113Gi
+Swap:             0B          0B          0B
+---
+Filesystem       Type      Size  Used Avail Use% Mounted on
+udev             devtmpfs   59G     0   59G   0% /dev
+tmpfs            tmpfs      12G  1.7M   12G   1% /run
+rpool/ROOT/pve-1 zfs       366G  2.5G  364G   1% /
+tmpfs            tmpfs      59G   48M   59G   1% /dev/shm
+tmpfs            tmpfs     1.0M     0  1.0M   0% /run/credentials/systemd-journald.service
+tmpfs            tmpfs     5.0M     0  5.0M   0% /run/lock
+tmpfs            tmpfs      59G     0   59G   0% /tmp
+rpool            zfs       364G  128K  364G   1% /rpool
+rpool/var-lib-vz zfs       364G  128K  364G   1% /var/lib/vz
+rpool/ROOT       zfs       364G  128K  364G   1% /rpool/ROOT
+rpool/data       zfs       364G  128K  364G   1% /rpool/data
+/dev/fuse        fuse      128M   28K  128M   1% /etc/pve
+tmpfs            tmpfs     1.0M     0  1.0M   0% /run/credentials/getty@tty1.service
+tmpfs            tmpfs      12G  4.0K   12G   1% /run/user/0

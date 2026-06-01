@@ -1,0 +1,1 @@
+/home/jamsec/audit-apex.sh: line 22: nikto: command not found

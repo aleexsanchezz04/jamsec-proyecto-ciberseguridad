@@ -1,0 +1,16 @@
+# Credenciales y secretos (NUNCA subir)
+CREDENCIALES.txt
+*.key
+*.pem
+id_ed25519*
+
+# Dependencias / artefactos de build
+node_modules/
+package-lock.json
+package.json
+
+# Temporales del sistema
+.DS_Store
+Thumbs.db
+*.tmp
+*~

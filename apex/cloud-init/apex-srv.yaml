@@ -1,0 +1,85 @@
+#cloud-config
+# ============================================================================
+#  apex-srv — Servidor interno del cliente (LAN)  10.30.10.20/24
+#  Debian 13 + vsftpd.
+#  VULNERABILIDADES INTENCIONADAS (objetivo de auditoría):
+#    - FTP con acceso ANÓNIMO y escritura habilitada (mala config)
+#    - Ficheros sensibles accesibles por FTP (backup SQL, credenciales)
+#    - Usuario SSH 'backup' con contraseña débil
+#    - FTP publicado a internet (apex-fw WAN:21)
+# ============================================================================
+hostname: apex-srv
+fqdn: apex-srv.apex-gestoria.cat
+manage_etc_hosts: true
+
+users:
+  - name: apex
+    groups: [sudo]
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    shell: /bin/bash
+    lock_passwd: false
+    plain_text_passwd: Apex2026!
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHJrzrkaIbwLspktR5Xg/s/nwWklhrQXUqp1vbZgWyYU admin@debian-server
+  # MALA PRÁCTICA (hallazgo): usuario de backups con contraseña débil
+  - name: backup
+    shell: /bin/bash
+    lock_passwd: false
+    plain_text_passwd: backup2024
+ssh_pwauth: true
+
+package_update: true
+packages:
+  - vsftpd
+  - qemu-guest-agent
+  - bind9-dnsutils
+
+write_files:
+  - path: /etc/vsftpd.conf
+    permissions: '0644'
+    content: |
+      listen=YES
+      listen_ipv6=NO
+      # MALA PRÁCTICA: FTP anónimo con permisos de escritura
+      anonymous_enable=YES
+      no_anon_password=YES
+      anon_root=/srv/ftp
+      anon_upload_enable=YES
+      anon_mkdir_write_enable=YES
+      local_enable=YES
+      write_enable=YES
+      dirmessage_enable=YES
+      use_localtime=YES
+      xferlog_enable=YES
+      # FTP en texto claro (sin TLS) -> hallazgo
+      pasv_enable=YES
+      pasv_min_port=30000
+      pasv_max_port=30100
+      pasv_address=172.20.17.230
+
+  - path: /srv/ftp/credencials.txt
+    permissions: '0644'
+    content: |
+      APEX GESTORIA - credencials internes (NO esborrar)
+      --------------------------------------------------
+      BBDD MariaDB 10.30.10.10:  root / toor
+      App web:                   apexweb / apexweb
+      Router/FW:                 admin / admin
+      WiFi oficina:              ApexGestoria2024
+
+  - path: /srv/ftp/backup_apexgestoria.sql
+    permissions: '0644'
+    content: |
+      -- Backup parcial apexgestoria (generat automaticament)
+      -- usuaris: admin/Apex.2026!  jmorales/gestoria2024  soporte/soporte123
+      INSERT INTO clientes VALUES ('Construccions Vidal SL','B12345678','ES7620770024003102575766');
+
+runcmd:
+  - systemctl enable --now qemu-guest-agent
+  - mkdir -p /srv/ftp/incoming
+  - chown ftp:ftp /srv/ftp/incoming
+  - chmod 0777 /srv/ftp/incoming
+  - systemctl enable --now vsftpd
+  - systemctl restart vsftpd
+
+final_message: "apex-srv cloud-init COMPLETADO tras $UPTIME segundos"

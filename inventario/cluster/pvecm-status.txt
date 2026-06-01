@@ -1,0 +1,30 @@
+﻿Cluster information
+-------------------
+Name:             JASOC-Cluster
+Config Version:   3
+Transport:        knet
+Secure auth:      on
+
+Quorum information
+------------------
+Date:             Mon Jun  1 15:49:10 2026
+Quorum provider:  corosync_votequorum
+Nodes:            3
+Node ID:          0x00000001
+Ring ID:          1.34e
+Quorate:          Yes
+
+Votequorum information
+----------------------
+Expected votes:   3
+Highest expected: 3
+Total votes:      3
+Quorum:           2  
+Flags:            Quorate 
+
+Membership information
+----------------------
+    Nodeid      Votes Name
+0x00000001          1 172.20.17.202 (local)
+0x00000002          1 172.20.17.203
+0x00000003          1 172.20.17.204

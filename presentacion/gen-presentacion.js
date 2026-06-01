@@ -80,12 +80,12 @@ sectionSlide(1, "El proyecto", "Una empresa de ciberseguridad y su cliente");
 // ---- Slide 4: presentación del proyecto ----
 (() => {
   const s = contentSlide("Presentación del proyecto");
-  s.addText("JAMSEC es una empresa de ciberseguridad que despliega su propia infraestructura, monitoriza la de sus clientes y audita su seguridad. El proyecto recrea ese ciclo completo de extremo a extremo sobre un clúster de virtualización.",
+  s.addText("JAMSEC es la empresa de ciberseguridad que represento en el proyecto. Monta su propia infraestructura, vigila la de sus clientes y, cuando se lo piden, los audita. Lo he montado todo sobre un clúster de virtualización real, con máquinas y servicios de verdad, no simulado.",
     { x: 0.9, y: 1.5, w: 11.5, h: 1.0, fontFace: BF, fontSize: 16, color: INK });
   const cols = [
-    [GREEN, "JAMSEC", "Empresa de ciberseguridad. Infraestructura propia + SOC (centro de operaciones)."],
-    [NAVY, "Apex Gestoría", "Cliente / víctima. Infraestructura objetivo de la auditoría de intrusión."],
-    ["7A869A", "Plataforma", "Clúster Proxmox VE de 3 nodos; dos infraestructuras separadas físicamente."],
+    [GREEN, "JAMSEC", "La empresa de ciberseguridad: su propia infraestructura y un SOC desde el que vigila y ataca."],
+    [NAVY, "Apex Gestoría", "El cliente, o más bien la víctima: la gestoría a la que acabo auditando."],
+    ["7A869A", "Plataforma", "Un clúster Proxmox de 3 nodos. Cada empresa va en un nodo distinto, separadas de verdad."],
   ];
   let x = 0.9;
   cols.forEach(c => {
@@ -128,7 +128,7 @@ sectionSlide(2, "Infraestructura propia (JAMSEC)", "Firewall · DMZ · servicios
   });
   // conectores
   [2.55, 6.65, 10.75].forEach(cx => s.addShape(p.shapes.LINE, { x: cx, y: 3.1, w: 0, h: 1.0, line: { color: GREEN, width: 1.5 } }));
-  s.addText("Política: la DMZ y los servicios internos están aislados entre sí y del SOC; salida a Internet controlada y publicación de la web por DNAT. Verificado: la DMZ NO alcanza la red interna.",
+  s.addText("La idea es sencilla: si alguien reventara la web de la DMZ, no debería poder llegar ni a los ficheros internos ni al SOC. Lo comprobé y, efectivamente, desde la DMZ no se llega a la red interna.",
     { x: 0.9, y: 5.95, w: 11.5, h: 0.9, fontFace: BF, fontSize: 13, italic: true, color: INK });
 })();
 
@@ -156,14 +156,14 @@ sectionSlide(3, "Infraestructura del cliente (Apex)", "El objetivo de la auditor
     s.addText(it[1], { x: cx + 0.3, y: cy + 0.62, w: 5.2, h: 0.35, fontFace: BF, fontSize: 13, color: NAVY, margin: 0 });
     s.addText(it[2], { x: cx + 0.3, y: cy + 1.0, w: 5.2, h: 0.55, fontFace: BF, fontSize: 12, italic: true, color: CRIT, margin: 0 });
   });
-  s.addText("Las vulnerabilidades son intencionadas y representan malas prácticas reales en pymes.",
+  s.addText("Los fallos los puse a propósito: son los típicos que te acabas encontrando en una pyme de verdad.",
     { x: 0.9, y: 6.35, w: 11.5, h: 0.5, fontFace: BF, fontSize: 12.5, italic: true, color: MUT });
 })();
 
 // ---- Slide 9: IDS/IPS/SIEM ----
 (() => {
   const s = contentSlide("Monitorización: IDS / IPS / SIEM");
-  s.addText("Wazuh (SIEM + HIDS) en el SOC y Suricata (IDS de red) en los dos cortafuegos vigilan ambas infraestructuras de forma centralizada.",
+  s.addText("Para vigilar las dos infraestructuras usé Wazuh como SIEM en el SOC y Suricata como IDS de red en los dos cortafuegos. La gracia es que todo se ve desde un único panel.",
     { x: 0.9, y: 1.45, w: 11.5, h: 0.7, fontFace: BF, fontSize: 15, color: INK });
   const stats = [["7", "agentes\nWazuh"], ["2", "infraestructuras\nmonitorizadas"], ["66k", "reglas IDS\n(ET Open)"], ["100%", "del ataque\ndetectado"]];
   let x = 0.9;
@@ -204,7 +204,7 @@ sectionSlide(4, "Desarrollo y tecnologías", "Cómo se construyó y por qué");
     s.addText(f[2], { x: 1.8, y: y + 0.4, w: 10.5, h: 0.4, fontFace: BF, fontSize: 13, color: MUT, margin: 0 });
     y += 1.02;
   });
-  s.addText("Todo reproducible: configuración como código (cloud-init + scripts) versionada en Git.",
+  s.addText("Casi todo quedó como código (cloud-init + scripts) guardado en Git, así que se puede volver a montar entero.",
     { x: 0.9, y: 6.75, w: 11.5, h: 0.4, fontFace: BF, fontSize: 12.5, italic: true, color: GREEN, margin: 0 });
 })();
 
@@ -246,7 +246,7 @@ sectionSlide(4, "Desarrollo y tecnologías", "Cómo se construyó y por qué");
     { text: "Pivote DMZ→LAN → datos internos", options: { bullet: true } },
   ], { x: 9.05, y: 2.05, w: 3.9, h: 1.6, fontFace: BF, fontSize: 12, color: INK, paraSpaceAfter: 5 });
   s.addText("Impacto demostrado", { x: 0.9, y: 3.5, w: 7, h: 0.4, fontFace: HF, fontSize: 16, bold: true, color: INK });
-  s.addText("Compromiso total del cliente: desde Internet hasta el robo de datos personales y financieros (NIF, IBAN, nóminas) almacenados en la red interna. El SIEM detectó el escaneo, la fuerza bruta y los accesos.",
+  s.addText("Resumiendo: entré desde internet, sin nada, y acabé sacando datos personales y financieros (NIF, IBAN, nóminas) de la red interna. Y mientras tanto el SIEM iba detectando el escaneo, la fuerza bruta y los accesos.",
     { x: 0.9, y: 3.95, w: 11.5, h: 1.2, fontFace: BF, fontSize: 14, color: INK });
   s.addText("Entregables: informe técnico (CVSS 3.1, OWASP) e informe ejecutivo para dirección.",
     { x: 0.9, y: 5.2, w: 11.5, h: 0.5, fontFace: BF, fontSize: 13, italic: true, color: MUT });

@@ -26,70 +26,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Àrea de clients · Apex Gestoria</title>
 <style>
-  :root{--blue:#16407a;--blue2:#1d5aa8;--teal:#0aa6a6;--ink:#1f2a44;--mut:#5b6b85;--line:#e3eaf3}
+  :root{--navy:#0b3b6f;--navy2:#0e4a89;--gold:#c8941f;--gold2:#e0ad3a;--ink:#1c2533;--mut:#5d6b7e;--line:#e9e2d4;--serif:Georgia,'Times New Roman',serif}
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',system-ui,Roboto,Arial,sans-serif;color:var(--ink);
-       min-height:100vh;display:flex;align-items:center;justify-content:center;
-       background:linear-gradient(135deg,#16407a,#0aa6a6)}
-  .card{background:#fff;width:100%;max-width:410px;margin:20px;border-radius:18px;
-        box-shadow:0 30px 60px rgba(0,0,0,.25);overflow:hidden}
-  .top{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;padding:34px 34px 28px;text-align:center}
-  .mark{width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,.15);
-        display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;margin:0 auto 14px}
-  .top h1{font-size:1.4rem}
-  .top p{opacity:.85;font-size:.9rem;margin-top:4px}
-  .body{padding:32px 34px 34px}
+  body{font-family:'Segoe UI',system-ui,Arial,sans-serif;color:var(--ink);min-height:100vh;display:flex}
+  /* left brand panel */
+  .left{flex:1;background:linear-gradient(150deg,var(--navy),#072a50);color:#fff;padding:56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+  .left::after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(200,148,31,.30),transparent 70%);bottom:-140px;left:-100px}
+  .brand{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:1.5rem;font-weight:700;position:relative;z-index:1}
+  .brand .mk{width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-weight:700;position:relative}
+  .brand .mk::after{content:"";position:absolute;right:-3px;bottom:-3px;width:14px;height:14px;background:var(--gold);border-radius:4px}
+  .left .mid{position:relative;z-index:1}
+  .left h2{font-family:var(--serif);font-size:2.3rem;line-height:1.25;margin-bottom:18px}
+  .left h2 em{color:var(--gold2);font-style:italic}
+  .feat{display:flex;align-items:center;gap:14px;margin-bottom:16px;opacity:.95}
+  .feat .ic{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex:none}
+  .left small{position:relative;z-index:1;opacity:.7}
+  /* right form */
+  .right{width:480px;display:flex;align-items:center;justify-content:center;padding:40px;background:#fdfbf6}
+  .box{width:100%;max-width:360px}
+  .box .top{margin-bottom:28px}
+  .box h1{font-family:var(--serif);font-size:1.9rem;color:var(--navy)}
+  .box .sub{color:var(--mut);font-size:.95rem;margin-top:6px}
   .field{margin-bottom:18px}
   .field label{display:block;font-size:.85rem;color:var(--mut);margin-bottom:7px;font-weight:600}
-  .ip{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;padding:0 12px;transition:.15s}
-  .ip:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(22,64,122,.12)}
-  .ip svg{flex:none;opacity:.5}
-  .ip input{border:0;outline:0;padding:13px 10px;width:100%;font-size:.98rem;font-family:inherit;background:transparent}
-  .btn{width:100%;background:var(--blue);color:#fff;font-weight:700;font-size:1rem;padding:13px;
-       border:0;border-radius:10px;cursor:pointer;transition:.2s}
-  .btn:hover{background:var(--blue2)}
-  .err{background:#fdecea;color:#b71c1c;border:1px solid #f5c6c0;border-radius:10px;
-       padding:11px 14px;font-size:.9rem;margin-bottom:18px;text-align:center}
-  .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:.85rem;color:var(--mut)}
-  .row a{color:var(--blue);text-decoration:none}
-  .back{display:block;text-align:center;margin-top:18px;font-size:.88rem;color:var(--mut);text-decoration:none}
-  .back:hover{color:var(--blue)}
-  .foot{text-align:center;font-size:.78rem;color:#9aa7bd;padding:0 34px 26px}
+  .ip{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:12px;padding:0 14px;background:#fff;transition:.15s}
+  .ip:focus-within{border-color:var(--navy);box-shadow:0 0 0 4px rgba(11,59,111,.10)}
+  .ip svg{flex:none;opacity:.55}
+  .ip input{border:0;outline:0;padding:14px 10px;width:100%;font-size:.98rem;font-family:inherit;background:transparent}
+  .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;font-size:.86rem;color:var(--mut)}
+  .row a{color:var(--navy)}
+  .btn{width:100%;background:var(--navy);color:#fff;font-weight:600;font-size:1rem;padding:14px;border:0;border-radius:12px;cursor:pointer;transition:.2s}
+  .btn:hover{background:var(--navy2);box-shadow:0 10px 22px rgba(11,59,111,.22)}
+  .err{background:#fdecea;color:#b3261e;border:1px solid #f3c0bb;border-radius:11px;padding:12px 14px;font-size:.9rem;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+  .back{display:inline-block;margin-top:22px;font-size:.9rem;color:var(--mut)}
+  .back:hover{color:var(--navy)}
+  @media(max-width:840px){.left{display:none}.right{width:100%}}
 </style>
 </head>
 <body>
-  <div class="card">
-    <div class="top">
-      <div class="mark">A</div>
-      <h1>Àrea de clients</h1>
-      <p>Apex Gestoria · accés privat</p>
+  <div class="left">
+    <div class="brand"><div class="mk">A</div> Apex Gestoria</div>
+    <div class="mid">
+      <h2>La teva gestió,<br>sempre <em>a mà</em>.</h2>
+      <div class="feat"><div class="ic">📄</div> Consulta les teves factures i documents</div>
+      <div class="feat"><div class="ic">📤</div> Puja documentació de forma segura</div>
+      <div class="feat"><div class="ic">🔔</div> Rep avisos abans de cada venciment</div>
     </div>
-    <div class="body">
-      <?php if ($err): ?><div class="err"><?php echo htmlspecialchars($err); ?></div><?php endif; ?>
-      <form method="post">
-        <div class="field">
-          <label>Usuari</label>
-          <div class="ip">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16407a" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
-            <input name="usuario" placeholder="El teu usuari" autofocus>
-          </div>
-        </div>
-        <div class="field">
-          <label>Contrasenya</label>
-          <div class="ip">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16407a" stroke-width="2"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-            <input name="password" type="password" placeholder="La teva contrasenya">
-          </div>
-        </div>
-        <div class="row">
-          <label style="display:flex;gap:7px;align-items:center;cursor:pointer"><input type="checkbox"> Recorda'm</label>
-          <a href="#">Has oblidat la contrasenya?</a>
-        </div>
-        <button class="btn" type="submit">Entrar</button>
-      </form>
-      <a class="back" href="index.php">&larr; Tornar a la web</a>
-    </div>
-    <div class="foot">Connexió privada · © 2026 Apex Gestoria</div>
+    <small>© 2026 Apex Gestoria · Connexió privada i xifrada</small>
   </div>
+
+  <div class="right"><div class="box">
+    <div class="top">
+      <h1>Àrea de clients</h1>
+      <div class="sub">Introdueix les teves credencials per accedir</div>
+    </div>
+    <?php if ($err): ?><div class="err">⚠️ <?php echo htmlspecialchars($err); ?></div><?php endif; ?>
+    <form method="post">
+      <div class="field">
+        <label>Usuari</label>
+        <div class="ip">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0b3b6f" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+          <input name="usuario" placeholder="El teu usuari" autofocus>
+        </div>
+      </div>
+      <div class="field">
+        <label>Contrasenya</label>
+        <div class="ip">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0b3b6f" stroke-width="2"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          <input name="password" type="password" placeholder="La teva contrasenya">
+        </div>
+      </div>
+      <div class="row">
+        <label style="display:flex;gap:7px;align-items:center;cursor:pointer"><input type="checkbox"> Recorda'm</label>
+        <a href="#">Has oblidat la contrasenya?</a>
+      </div>
+      <button class="btn" type="submit">Entrar a la meva àrea</button>
+    </form>
+    <a class="back" href="index.php">&larr; Tornar a la web</a>
+  </div></div>
 </body>
 </html>

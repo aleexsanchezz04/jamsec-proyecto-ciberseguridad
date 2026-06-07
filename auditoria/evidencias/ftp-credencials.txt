@@ -1,6 +1,0 @@
-APEX GESTORIA - credencials internes (NO esborrar)
---------------------------------------------------
-BBDD MariaDB 10.30.10.10:  root / toor
-App web:                   apexweb / apexweb
-Router/FW:                 admin / admin
-WiFi oficina:              ApexGestoria2024

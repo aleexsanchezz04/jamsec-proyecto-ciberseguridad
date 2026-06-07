@@ -1,6 +1,0 @@
-﻿/etc/pve/firewall/:
-total 0
-drwxr-xr-x 2 root www-data 0 Apr 22 19:37 .
-drwxr-xr-x 2 root www-data 0 Jan  1  1970 ..
-===
-cat: '/etc/pve/firewall/*.fw': No such file or directory

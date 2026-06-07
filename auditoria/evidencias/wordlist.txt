@@ -1,8 +1,0 @@
-123456
-admin
-password
-soporte
-soporte123
-root
-toor
-apex

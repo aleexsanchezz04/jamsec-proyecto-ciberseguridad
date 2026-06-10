@@ -6,8 +6,8 @@
 <title>JAMSEC · Ciberseguridad ofensiva y defensiva</title>
 <style>
   :root{
-    --bg:#05080f; --bg2:#0a1018; --card:#0e1722; --line:#1a2738;
-    --tx:#e8f0fb; --mut:#8aa0bd; --ac:#00e676; --cy:#22d3ee; --pink:#ff5d8f;
+    --bg:#05080f;--bg2:#0a1018;--card:#0e1722;--line:#1a2738;
+    --tx:#e8f0fb;--mut:#8aa0bd;--ac:#00e676;--cy:#22d3ee;--pink:#ff5d8f;
     --mono:'Consolas','SF Mono','Roboto Mono',monospace;
   }
   *{margin:0;padding:0;box-sizing:border-box}
@@ -15,97 +15,139 @@
   body{font-family:'Segoe UI',system-ui,Arial,sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;overflow-x:hidden}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
-  .bgfx{position:fixed;inset:0;z-index:-2;background:
-     radial-gradient(60% 50% at 80% 0%,rgba(0,230,118,.10),transparent 70%),
-     radial-gradient(50% 50% at 0% 30%,rgba(34,211,238,.08),transparent 70%),var(--bg)}
-  .grid-bg{position:fixed;inset:0;z-index:-1;opacity:.35;
-     background-image:linear-gradient(rgba(26,39,56,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(26,39,56,.6) 1px,transparent 1px);
-     background-size:46px 46px;-webkit-mask-image:radial-gradient(circle at 50% 25%,#000 0%,transparent 75%);mask-image:radial-gradient(circle at 50% 25%,#000 0%,transparent 75%)}
-  .orb{position:fixed;border-radius:50%;filter:blur(60px);z-index:-1;opacity:.5;animation:float 14s ease-in-out infinite}
-  .orb.a{width:340px;height:340px;background:rgba(0,230,118,.25);top:-60px;right:8%}
-  .orb.b{width:300px;height:300px;background:rgba(34,211,238,.18);bottom:5%;left:-60px;animation-delay:-5s}
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
-  header{position:fixed;top:0;left:0;right:0;z-index:50;transition:.3s}
-  header.scrolled{background:rgba(5,8,15,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-  nav{display:flex;align-items:center;justify-content:space-between;height:74px}
+  .bgfx{position:fixed;inset:0;z-index:-3;background:
+     radial-gradient(65% 55% at 85% -5%,rgba(0,230,118,.13),transparent 70%),
+     radial-gradient(55% 50% at -5% 35%,rgba(34,211,238,.09),transparent 70%),var(--bg)}
+  .hex-bg{position:fixed;inset:0;z-index:-2;opacity:.22;
+     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V18L28 2l28 16v32L28 66zm0 0v34M0 50l28 16 28-16' fill='none' stroke='%231a2738' stroke-width='1'/%3E%3C/svg%3E");
+     -webkit-mask-image:radial-gradient(ellipse at 50% 0%,#000 0%,transparent 80%);mask-image:radial-gradient(ellipse at 50% 0%,#000 0%,transparent 80%)}
+  .orb{position:fixed;border-radius:50%;filter:blur(90px);z-index:-1;opacity:.38;animation:float 14s ease-in-out infinite}
+  .orb.a{width:420px;height:420px;background:rgba(0,230,118,.22);top:-80px;right:6%}
+  .orb.b{width:360px;height:360px;background:rgba(34,211,238,.15);bottom:0;left:-80px;animation-delay:-5s}
+  .orb.c{width:260px;height:260px;background:rgba(255,93,143,.10);top:45%;right:-60px;animation-delay:-9s}
+  @keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-32px) scale(1.04)}}
+  .ticker{background:rgba(0,230,118,.06);border-bottom:1px solid rgba(0,230,118,.12);height:34px;overflow:hidden;position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center}
+  .ticker-inner{display:flex;align-items:center;white-space:nowrap;animation:tickrun 40s linear infinite;font-family:var(--mono);font-size:.74rem;color:var(--mut)}
+  .ticker-inner span{padding:0 28px;border-right:1px solid var(--line)}
+  .ticker-inner span b{color:var(--ac)}
+  .tick-lbl{background:rgba(0,230,118,.14);color:var(--ac);font-size:.63rem;padding:2px 7px;border-radius:4px;margin-right:7px;font-weight:700;letter-spacing:.5px}
+  @keyframes tickrun{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  header{position:fixed;top:34px;left:0;right:0;z-index:50;transition:.3s}
+  header.scrolled{background:rgba(5,8,15,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:72px}
   .logo{font-weight:800;font-size:1.45rem;letter-spacing:1px;display:flex;align-items:center;gap:10px}
-  .logo .sq{width:14px;height:14px;background:var(--ac);box-shadow:0 0 14px var(--ac);border-radius:3px;animation:pulse 2s infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .logo .sq{width:14px;height:14px;background:var(--ac);box-shadow:0 0 16px var(--ac);border-radius:3px;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.82)}}
   .logo span{color:var(--ac)}
-  .menu{display:flex;gap:32px;font-size:.92rem;color:var(--mut);font-family:var(--mono)}
-  .menu a{position:relative}
-  .menu a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:2px;background:var(--ac);transition:.25s}
-  .menu a:hover{color:var(--tx)} .menu a:hover::after{width:100%}
-  .btn{background:var(--ac);color:#03130a;font-weight:700;padding:11px 20px;border-radius:8px;border:0;cursor:pointer;transition:.2s;font-family:inherit;display:inline-block}
-  .btn:hover{box-shadow:0 0 24px rgba(0,230,118,.5);transform:translateY(-2px)}
-  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--tx)}
-  .btn-ghost:hover{border-color:var(--ac);box-shadow:none}
-  .hero{padding:160px 0 90px}
-  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:46px;align-items:center}
-  .tagline{font-family:var(--mono);color:var(--ac);font-size:.85rem;letter-spacing:1px;margin-bottom:18px;display:flex;align-items:center;gap:10px}
-  .tagline .dot{width:8px;height:8px;border-radius:50%;background:var(--ac);box-shadow:0 0 12px var(--ac)}
-  h1{font-size:3.3rem;line-height:1.08;font-weight:800;letter-spacing:-1px}
-  .type{color:var(--ac)}
-  .cursor{display:inline-block;width:3px;height:1em;background:var(--ac);margin-left:2px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+  .menu{display:flex;gap:30px;font-size:.92rem;color:var(--mut);font-family:var(--mono)}
+  .menu a{position:relative;padding:4px 0}
+  .menu a::after{content:"";position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--ac);transition:.25s}
+  .menu a:hover{color:var(--tx)}.menu a:hover::after{width:100%}
+  .btn{background:var(--ac);color:#03130a;font-weight:700;padding:11px 22px;border-radius:8px;border:0;cursor:pointer;transition:.2s;font-family:inherit;display:inline-block;font-size:.9rem}
+  .btn:hover{box-shadow:0 0 30px rgba(0,230,118,.5);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;border:1px solid rgba(0,230,118,.3);color:var(--tx)}
+  .btn-ghost:hover{border-color:var(--ac);background:rgba(0,230,118,.06)}
+  .hero{padding:200px 0 100px}
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:54px;align-items:center}
+  .tagline{font-family:var(--mono);font-size:.8rem;letter-spacing:1.5px;margin-bottom:20px;display:flex;align-items:center;gap:10px;color:var(--ac)}
+  .tagline .dot{width:7px;height:7px;border-radius:50%;background:var(--ac);box-shadow:0 0 12px var(--ac);animation:pulse 2s infinite}
+  h1{font-size:3.6rem;line-height:1.07;font-weight:900;letter-spacing:-1.5px}
+  .grad{background:linear-gradient(135deg,#e8f0fb 20%,var(--ac) 60%,var(--cy) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .type-w{-webkit-text-fill-color:var(--ac);color:var(--ac)}
+  .cursor{display:inline-block;width:3px;height:.88em;background:var(--ac);margin-left:3px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
-  .hero p{color:var(--mut);font-size:1.15rem;max-width:540px;margin:24px 0 32px}
+  .hero p{color:var(--mut);font-size:1.12rem;max-width:520px;margin:22px 0 34px;line-height:1.75}
   .cta{display:flex;gap:14px;flex-wrap:wrap}
-  .term{background:#070c14;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.5)}
-  .term-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#0b121c;border-bottom:1px solid var(--line)}
-  .term-bar i{width:12px;height:12px;border-radius:50%;display:inline-block}
+  .term{background:#060c14;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.65),0 0 0 1px rgba(0,230,118,.05)}
+  .term-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#0a1220;border-bottom:1px solid var(--line)}
+  .term-bar i{width:12px;height:12px;border-radius:50%}
   .r{background:#ff5f56}.y{background:#ffbd2e}.g{background:#27c93f}
-  .term-bar span{margin-left:10px;font-family:var(--mono);font-size:.8rem;color:var(--mut)}
-  .term-body{padding:18px;font-family:var(--mono);font-size:.86rem;min-height:280px}
-  .ln{margin-bottom:7px;opacity:0;transform:translateY(6px);animation:ln .4s forwards}
-  .ln .p{color:var(--ac)} .ln .w{color:#ffbd2e} .ln .c{color:var(--cy)} .ln .d{color:var(--mut)}
+  .term-bar span{margin-left:10px;font-family:var(--mono);font-size:.78rem;color:var(--mut)}
+  .term-body{padding:20px;font-family:var(--mono);font-size:.84rem;min-height:290px}
+  .ln{margin-bottom:8px;opacity:0;transform:translateY(5px);animation:ln .4s forwards}
+  .ln .p{color:var(--ac)}.ln .w{color:#ffbd2e}.ln .c{color:var(--cy)}.ln .d{color:var(--mut)}.ln .e{color:var(--pink)}
   @keyframes ln{to{opacity:1;transform:none}}
-  section{padding:90px 0;position:relative}
-  .kicker{font-family:var(--mono);color:var(--cy);font-size:.8rem;letter-spacing:2px;text-transform:uppercase}
-  h2{font-size:2.3rem;font-weight:800;margin:10px 0 14px;letter-spacing:-.5px}
-  .lead{color:var(--mut);max-width:600px;margin-bottom:46px}
+  .tools-band{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .tools-inner{display:flex;animation:toolscroll 32s linear infinite}
+  .tool-badge{display:flex;align-items:center;gap:9px;padding:13px 28px;font-family:var(--mono);font-size:.82rem;color:var(--mut);border-right:1px solid var(--line);white-space:nowrap;transition:.2s}
+  .tool-badge:hover{color:var(--tx);background:rgba(255,255,255,.02)}
+  .tool-dot{width:6px;height:6px;border-radius:50%;background:var(--ac);box-shadow:0 0 8px var(--ac);flex:none}
+  @keyframes toolscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  section{padding:88px 0;position:relative}
+  .kicker{font-family:var(--mono);color:var(--cy);font-size:.78rem;letter-spacing:2.5px;text-transform:uppercase}
+  h2{font-size:2.4rem;font-weight:800;margin:10px 0 14px;letter-spacing:-.5px}
+  .lead{color:var(--mut);max-width:620px;margin-bottom:48px;font-size:1.02rem}
   .reveal{opacity:0;transform:translateY(28px);transition:.7s cubic-bezier(.2,.7,.2,1)}
   .reveal.in{opacity:1;transform:none}
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-  .stat{background:linear-gradient(180deg,var(--card),#0a121c);border:1px solid var(--line);border-radius:14px;padding:24px;position:relative;overflow:hidden}
+  .stat{background:linear-gradient(160deg,var(--card),#09111a);border:1px solid var(--line);border-radius:16px;padding:26px;position:relative;overflow:hidden;transition:.3s}
+  .stat:hover{border-color:rgba(0,230,118,.28);transform:translateY(-4px)}
   .stat::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--ac),var(--cy))}
-  .stat b{font-size:2.3rem;font-weight:800;color:var(--ac);font-family:var(--mono)}
-  .stat span{color:var(--mut);font-size:.88rem;display:block;margin-top:4px}
+  .stat b{font-size:2.5rem;font-weight:800;color:var(--ac);font-family:var(--mono)}
+  .stat span{color:var(--mut);font-size:.85rem;display:block;margin-top:6px}
+  .stat .ico{position:absolute;bottom:14px;right:16px;font-size:1.9rem;opacity:.14}
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;transition:.25s;position:relative;overflow:hidden}
-  .card::after{content:"";position:absolute;inset:0;background:radial-gradient(400px circle at var(--mx,50%) var(--my,0%),rgba(0,230,118,.10),transparent 60%);opacity:0;transition:.3s}
-  .card:hover{transform:translateY(-6px);border-color:var(--ac)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:30px;transition:.3s;position:relative;overflow:hidden;cursor:default}
+  .card::before{content:"";position:absolute;inset:-1px;border-radius:18px;background:linear-gradient(135deg,rgba(0,230,118,.35),rgba(34,211,238,.2));opacity:0;transition:.3s;z-index:-1}
+  .card::after{content:"";position:absolute;inset:0;background:radial-gradient(380px circle at var(--mx,50%) var(--my,50%),rgba(0,230,118,.07),transparent 60%);opacity:0;transition:.3s}
+  .card:hover{transform:translateY(-6px)}
+  .card:hover::before{opacity:.6}
   .card:hover::after{opacity:1}
-  .ico{width:50px;height:50px;border-radius:12px;background:rgba(0,230,118,.10);border:1px solid rgba(0,230,118,.25);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
-  .card h3{font-size:1.18rem;margin-bottom:8px}
-  .card p{color:var(--mut);font-size:.93rem}
-  .card .num{position:absolute;top:18px;right:22px;font-family:var(--mono);color:var(--line);font-size:1.4rem;font-weight:800}
-  .soc{display:grid;grid-template-columns:1fr 1.1fr;gap:46px;align-items:center}
-  .feed{background:#070c14;border:1px solid var(--line);border-radius:16px;padding:8px}
-  .feed-h{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;font-family:var(--mono);font-size:.8rem;color:var(--mut)}
-  .live{display:flex;align-items:center;gap:7px;color:var(--ac)}
-  .live i{width:8px;height:8px;border-radius:50%;background:var(--ac);box-shadow:0 0 10px var(--ac);animation:pulse 1.3s infinite}
-  .ev{display:flex;align-items:center;gap:12px;padding:11px 14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.82rem}
-  .ev .t{color:var(--mut)} .ev .m{flex:1}
-  .tag{font-size:.7rem;padding:3px 9px;border-radius:999px;font-weight:700}
-  .ok{background:rgba(0,230,118,.15);color:var(--ac)} .wn{background:rgba(255,189,46,.15);color:#ffbd2e} .cr{background:rgba(255,93,143,.18);color:var(--pink)}
-  .check{display:flex;gap:14px;margin-bottom:18px}
-  .check .b{width:30px;height:30px;border-radius:8px;background:rgba(0,230,118,.10);border:1px solid rgba(0,230,118,.25);display:flex;align-items:center;justify-content:center;flex:none}
-  .check p{color:var(--mut);font-size:.92rem} .check h4{font-size:1.02rem}
-  .band{border:1px solid var(--line);border-radius:20px;padding:54px;text-align:center;position:relative;overflow:hidden;background:linear-gradient(120deg,rgba(0,230,118,.10),rgba(34,211,238,.08))}
-  .band::before{content:"";position:absolute;inset:-2px;background:conic-gradient(from 0deg,transparent,rgba(0,230,118,.25),transparent 30%);animation:spin 8s linear infinite;z-index:-1}
+  .ico{width:52px;height:52px;border-radius:14px;background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.18);display:flex;align-items:center;justify-content:center;margin-bottom:18px;transition:.3s}
+  .card:hover .ico{background:rgba(0,230,118,.14);border-color:rgba(0,230,118,.38)}
+  .card h3{font-size:1.16rem;margin-bottom:9px;font-weight:700}
+  .card p{color:var(--mut);font-size:.92rem;line-height:1.62}
+  .card .num{position:absolute;top:18px;right:22px;font-family:var(--mono);color:rgba(0,230,118,.12);font-size:1.6rem;font-weight:800}
+  .soc-wrap{display:grid;grid-template-columns:1fr 1.15fr;gap:48px;align-items:center}
+  .feed{background:#060c14;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 24px 56px rgba(0,0,0,.45)}
+  .feed-h{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#0a1220;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:.78rem}
+  .live{display:flex;align-items:center;gap:7px;color:var(--ac);font-weight:600}
+  .live i{width:7px;height:7px;border-radius:50%;background:var(--ac);box-shadow:0 0 10px var(--ac);animation:pulse 1.3s infinite}
+  .ev{display:flex;align-items:center;gap:12px;padding:12px 18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.81rem;animation:evfade .4s ease}
+  @keyframes evfade{from{opacity:0;background:rgba(0,230,118,.04)}to{opacity:1;background:transparent}}
+  .ev .t{color:var(--mut);min-width:60px}.ev .m{flex:1}
+  .tag{font-size:.68rem;padding:3px 9px;border-radius:999px;font-weight:700;letter-spacing:.4px}
+  .ok{background:rgba(0,230,118,.11);color:var(--ac)}.wn{background:rgba(255,189,46,.11);color:#ffbd2e}.cr{background:rgba(255,93,143,.14);color:var(--pink)}
+  .check{display:flex;gap:14px;margin-bottom:20px;align-items:flex-start}
+  .check .b{width:32px;height:32px;border-radius:9px;background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.18);display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px}
+  .check p{color:var(--mut);font-size:.91rem}.check h4{font-size:1rem;margin-bottom:4px}
+  .tl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .tstep{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px;position:relative;overflow:hidden;transition:.25s}
+  .tstep:hover{border-color:rgba(0,230,118,.28);transform:translateY(-4px)}
+  .tstep .n{font-family:var(--mono);font-size:2.8rem;font-weight:800;color:rgba(0,230,118,.1);line-height:1;margin-bottom:12px}
+  .tstep h3{font-size:1.12rem;margin-bottom:8px;font-weight:700}
+  .tstep p{color:var(--mut);font-size:.9rem}
+  .tstep-hl{background:linear-gradient(135deg,rgba(0,230,118,.1),rgba(34,211,238,.06));border-color:rgba(0,230,118,.28)}
+  .band{border:1px solid rgba(0,230,118,.18);border-radius:24px;padding:60px 56px;text-align:center;position:relative;overflow:hidden;background:linear-gradient(120deg,rgba(0,230,118,.06),rgba(34,211,238,.04))}
+  .band::before{content:"";position:absolute;inset:-2px;background:conic-gradient(from 0deg,transparent 65%,rgba(0,230,118,.28) 78%,transparent 92%);animation:spin 10s linear infinite;z-index:-1;border-radius:24px}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .contact{display:grid;grid-template-columns:1fr 1fr;gap:44px}
+  .band h2{font-size:2.4rem;margin-bottom:12px}
+  .band p{color:var(--mut);max-width:520px;margin:0 auto 28px;font-size:1.04rem}
+  .contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:52px}
+  .info-row{display:flex;align-items:center;gap:14px;margin-bottom:20px;font-family:var(--mono);font-size:.9rem}
+  .info-ico{width:40px;height:40px;border-radius:10px;background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.14);display:flex;align-items:center;justify-content:center;flex:none}
   .field{margin-bottom:16px}
-  .field label{display:block;font-size:.82rem;color:var(--mut);margin-bottom:6px;font-family:var(--mono)}
-  .field input,.field textarea{width:100%;background:#070c14;border:1px solid var(--line);border-radius:10px;padding:13px;color:var(--tx);font-family:inherit}
-  .field input:focus,.field textarea:focus{outline:0;border-color:var(--ac)}
-  footer{border-top:1px solid var(--line);padding:44px 0;color:var(--mut);font-size:.9rem}
-  .fgrid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;align-items:center}
-  @media(max-width:880px){.menu{display:none}.hero-grid,.soc,.contact{grid-template-columns:1fr}.stats,.grid{grid-template-columns:1fr 1fr}h1{font-size:2.4rem}}
+  .field label{display:block;font-size:.78rem;color:var(--mut);margin-bottom:6px;font-family:var(--mono);letter-spacing:.5px;text-transform:uppercase}
+  .field input,.field textarea{width:100%;background:#07101a;border:1px solid var(--line);border-radius:10px;padding:13px;color:var(--tx);font-family:inherit;transition:.2s;font-size:.95rem}
+  .field input:focus,.field textarea:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 3px rgba(0,230,118,.07)}
+  footer{border-top:1px solid var(--line);padding:56px 0 30px}
+  .fgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+  .fcol h4{font-family:var(--mono);font-size:.76rem;letter-spacing:2.5px;color:var(--cy);text-transform:uppercase;margin-bottom:16px}
+  .fcol a{display:block;color:var(--mut);font-size:.9rem;margin-bottom:10px;transition:.2s}
+  .fcol a:hover{color:var(--tx)}
+  .fbar{border-top:1px solid var(--line);padding-top:22px;display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-size:.85rem;font-family:var(--mono)}
+  .socials{display:flex;gap:10px}
+  .soc-btn{width:36px;height:36px;border-radius:9px;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;transition:.2s;color:var(--mut)}
+  .soc-btn:hover{border-color:var(--ac);color:var(--ac);background:rgba(0,230,118,.07)}
+  @media(max-width:900px){.menu{display:none}.hero-grid,.soc-wrap,.contact-grid,.fgrid{grid-template-columns:1fr}.stats,.grid,.tl-grid{grid-template-columns:1fr 1fr}h1{font-size:2.5rem}}
+  @media(max-width:560px){.stats,.grid,.tl-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="bgfx"></div><div class="grid-bg"></div><div class="orb a"></div><div class="orb b"></div>
+<div class="bgfx"></div><div class="hex-bg"></div>
+<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+
+<div class="ticker"><div class="ticker-inner" id="tk"></div></div>
 
 <header id="hdr"><div class="wrap"><nav>
   <div class="logo"><span class="sq"></span> JAM<span>SEC</span></div>
@@ -120,11 +162,11 @@
 
 <div class="hero"><div class="wrap"><div class="hero-grid">
   <div>
-    <div class="tagline"><span class="dot"></span> SOC operativo 24/7 · respuesta &lt; 15 min</div>
-    <h1>Pensamos como el <span class="type" id="type">atacante</span><span class="cursor"></span><br>para que tú no sufras uno.</h1>
-    <p>JAMSEC es una consultora de ciberseguridad. Auditamos, vigilamos y respondemos: combinamos un equipo Red Team ofensivo con un SOC defensivo 24/7.</p>
+    <div class="tagline"><span class="dot"></span> SOC operativo 24/7 &nbsp;·&nbsp; respuesta &lt; 15 min</div>
+    <h1><span class="grad">Pensamos como el<br><span class="type-w" id="type">atacante</span><span class="cursor"></span><br>para que no sufras uno.</span></h1>
+    <p>JAMSEC es una consultora de ciberseguridad ofensiva y defensiva. Auditamos, vigilamos y respondemos: combinamos Red Team con un SOC 24/7 totalmente operativo.</p>
     <div class="cta">
-      <a href="#contacto" class="btn">Solicitar una auditoría</a>
+      <a href="#contacto" class="btn">Solicitar auditoría</a>
       <a href="#servicios" class="btn btn-ghost">Ver servicios</a>
     </div>
   </div>
@@ -134,12 +176,14 @@
   </div>
 </div></div></div>
 
+<div class="tools-band"><div class="tools-inner" id="tools"></div></div>
+
 <section id="stats"><div class="wrap reveal">
   <div class="stats">
-    <div class="stat"><b class="count" data-to="124">0</b><span>auditorías realizadas</span></div>
-    <div class="stat"><b class="count" data-to="24" data-suffix="/7">0</b><span>vigilancia del SOC</span></div>
-    <div class="stat"><b class="count" data-to="99" data-suffix="%">0</b><span>disponibilidad</span></div>
-    <div class="stat"><b class="count" data-to="15" data-prefix="&lt;" data-suffix=" min">0</b><span>tiempo de respuesta</span></div>
+    <div class="stat"><b class="count" data-to="124">0</b><span>auditorías realizadas</span><div class="ico">🛡️</div></div>
+    <div class="stat"><b class="count" data-to="24" data-suffix="/7">0</b><span>vigilancia del SOC</span><div class="ico">👁️</div></div>
+    <div class="stat"><b class="count" data-to="99" data-suffix="%">0</b><span>disponibilidad garantizada</span><div class="ico">✅</div></div>
+    <div class="stat"><b class="count" data-to="15" data-prefix="<" data-suffix=" min">0</b><span>tiempo de respuesta</span><div class="ico">⚡</div></div>
   </div>
 </div></section>
 
@@ -148,92 +192,140 @@
   <p class="lead">Cubrimos el ciclo completo: te atacamos antes que nadie, te vigilamos siempre y respondemos cuando hace falta.</p></div>
   <div class="grid reveal">
     <div class="card"><span class="num">01</span><div class="ico"><svg width="24" height="24" fill="none" stroke="#00e676" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg></div><h3>Auditoría de intrusión</h3><p>Pentesting de red, web y sistemas con metodología PTES/OWASP. Te enseñamos cómo entraría un atacante real.</p></div>
-    <div class="card"><span class="num">02</span><div class="ico"><svg width="24" height="24" fill="none" stroke="#00e676" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div><h3>Monitorización SOC</h3><p>SIEM + IDS/IPS gestionados (Wazuh y Suricata). Vigilancia 24/7 con alertas en tiempo real.</p></div>
-    <div class="card"><span class="num">03</span><div class="ico"><svg width="24" height="24" fill="none" stroke="#00e676" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></div><h3>Respuesta a incidentes</h3><p>Contención, análisis forense y notificación de brechas. Te devolvemos la normalidad con el mínimo impacto.</p></div>
-    <div class="card"><span class="num">04</span><div class="ico"><svg width="24" height="24" fill="none" stroke="#00e676" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Cumplimiento y RGPD</h3><p>Adecuación normativa y políticas de seguridad realistas, adaptadas a tu organización.</p></div>
-    <div class="card"><span class="num">05</span><div class="ico"><svg width="24" height="24" fill="none" stroke="#00e676" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><h3>Hardening</h3><p>Fortificamos servidores, redes y servicios cerrando puertas antes de que alguien las use.</p></div>
-    <div class="card"><span class="num">06</span><div class="ico"><svg width="24" height="24" fill="none" stroke="#00e676" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><h3>Concienciación</h3><p>Simulaciones de phishing y formación práctica: el eslabón humano deja de ser el más débil.</p></div>
+    <div class="card"><span class="num">02</span><div class="ico"><svg width="24" height="24" fill="none" stroke="#00e676" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div><h3>Monitorización SOC</h3><p>SIEM + IDS/IPS gestionados con Wazuh y Suricata. Vigilancia 24/7 con alertas en tiempo real y correlación avanzada.</p></div>
+    <div class="card"><span class="num">03</span><div class="ico"><svg width="24" height="24" fill="none" stroke="#00e676" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></div><h3>Respuesta a incidentes</h3><p>Contención, análisis forense y notificación de brechas. Te devolvemos la normalidad con el mínimo impacto operativo.</p></div>
+    <div class="card"><span class="num">04</span><div class="ico"><svg width="24" height="24" fill="none" stroke="#00e676" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Cumplimiento y RGPD</h3><p>Adecuación normativa y políticas de seguridad realistas y auditables, adaptadas a tu organización y sector.</p></div>
+    <div class="card"><span class="num">05</span><div class="ico"><svg width="24" height="24" fill="none" stroke="#00e676" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><h3>Hardening</h3><p>Fortificamos servidores, redes y servicios cerrando vectores de ataque antes de que alguien los use en tu contra.</p></div>
+    <div class="card"><span class="num">06</span><div class="ico"><svg width="24" height="24" fill="none" stroke="#00e676" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><h3>Concienciación</h3><p>Simulaciones de phishing y formación práctica: convertimos al eslabón humano en tu primera línea de defensa.</p></div>
   </div>
 </div></section>
 
-<section id="soc" style="background:linear-gradient(180deg,transparent,rgba(10,16,24,.6))"><div class="wrap"><div class="soc reveal">
+<section id="soc" style="background:linear-gradient(180deg,transparent,rgba(9,16,25,.7))"><div class="wrap"><div class="soc-wrap reveal">
   <div>
     <div class="kicker">// blue team</div><h2>Un SOC que no duerme</h2>
     <p class="lead">Cada evento de tus sistemas pasa por nuestro centro de operaciones. Detectamos antes de que el problema crezca.</p>
-    <div class="check"><div class="b"><svg width="16" height="16" fill="none" stroke="#00e676" stroke-width="3"><path d="M4 9l4 4 8-9"/></svg></div><div><h4>Correlación en tiempo real</h4><p>Eventos de host y de red unificados en un único panel.</p></div></div>
-    <div class="check"><div class="b"><svg width="16" height="16" fill="none" stroke="#00e676" stroke-width="3"><path d="M4 9l4 4 8-9"/></svg></div><div><h4>Alertas accionables</h4><p>Sin ruido: solo lo que importa, con contexto para actuar.</p></div></div>
-    <div class="check"><div class="b"><svg width="16" height="16" fill="none" stroke="#00e676" stroke-width="3"><path d="M4 9l4 4 8-9"/></svg></div><div><h4>Informes claros</h4><p>Uno técnico para IT y otro ejecutivo para dirección.</p></div></div>
+    <div class="check"><div class="b"><svg width="16" height="16" fill="none" stroke="#00e676" stroke-width="3"><path d="M4 9l4 4 8-9"/></svg></div><div><h4>Correlación en tiempo real</h4><p>Eventos de host y de red unificados en un único panel Wazuh.</p></div></div>
+    <div class="check"><div class="b"><svg width="16" height="16" fill="none" stroke="#00e676" stroke-width="3"><path d="M4 9l4 4 8-9"/></svg></div><div><h4>Alertas accionables</h4><p>Sin ruido: solo lo que importa, con contexto para actuar de inmediato.</p></div></div>
+    <div class="check"><div class="b"><svg width="16" height="16" fill="none" stroke="#00e676" stroke-width="3"><path d="M4 9l4 4 8-9"/></svg></div><div><h4>IDS de red con Suricata</h4><p>66.000+ reglas actualizadas para detectar tráfico malicioso en el perímetro.</p></div></div>
+    <div class="check"><div class="b"><svg width="16" height="16" fill="none" stroke="#00e676" stroke-width="3"><path d="M4 9l4 4 8-9"/></svg></div><div><h4>Informes claros y útiles</h4><p>Uno técnico para IT y otro ejecutivo para dirección, sin jerga innecesaria.</p></div></div>
   </div>
   <div class="feed">
-    <div class="feed-h"><span>// soc_live_feed</span><span class="live"><i></i> EN VIVO</span></div>
+    <div class="feed-h"><span class="live"><i></i> EN VIVO</span><span style="font-family:var(--mono);font-size:.78rem;color:var(--mut)">// soc_live_feed</span></div>
     <div id="feed"></div>
   </div>
 </div></div></section>
 
 <section id="metodo"><div class="wrap reveal">
   <div class="kicker">// cómo trabajamos</div><h2>De cero a informe en 5 pasos</h2>
-  <p class="lead">Un proceso ordenado, basado en estándares, para que sepas siempre en qué punto estamos.</p>
-  <div class="grid">
-    <div class="card"><span class="num">→</span><h3>1. Reconocimiento</h3><p>Mapeamos tu superficie de exposición.</p></div>
-    <div class="card"><span class="num">→</span><h3>2. Análisis</h3><p>Identificamos las vulnerabilidades reales.</p></div>
-    <div class="card"><span class="num">→</span><h3>3. Explotación</h3><p>Las aprovechamos de forma controlada.</p></div>
-    <div class="card"><span class="num">→</span><h3>4. Post-explotación</h3><p>Medimos hasta dónde se podría llegar.</p></div>
-    <div class="card"><span class="num">→</span><h3>5. Informe</h3><p>Hallazgos con CVSS y plan de corrección.</p></div>
-    <div class="card" style="background:linear-gradient(135deg,rgba(0,230,118,.12),rgba(34,211,238,.08));border-color:rgba(0,230,118,.3)"><h3 style="color:#00e676">+ Reauditoría</h3><p>Volvemos para confirmar que todo quedó cerrado.</p></div>
+  <p class="lead">Un proceso ordenado, basado en estándares internacionales, para que sepas siempre en qué punto estamos.</p>
+  <div class="tl-grid">
+    <div class="tstep"><div class="n">01</div><h3>Reconocimiento</h3><p>Mapeamos tu superficie de exposición sin levantar alertas ni dejar rastro.</p></div>
+    <div class="tstep"><div class="n">02</div><h3>Análisis</h3><p>Identificamos vulnerabilidades reales con pruebas concluyentes y sin falsos positivos.</p></div>
+    <div class="tstep"><div class="n">03</div><h3>Explotación</h3><p>Aprovechamos los hallazgos de forma controlada para medir el impacto real.</p></div>
+    <div class="tstep"><div class="n">04</div><h3>Post-explotación</h3><p>Medimos el alcance del movimiento lateral y la exfiltración posible.</p></div>
+    <div class="tstep"><div class="n">05</div><h3>Informe</h3><p>Hallazgos con CVSS, PoC reproducible y plan de corrección priorizado.</p></div>
+    <div class="tstep tstep-hl"><div class="n" style="color:rgba(0,230,118,.35)">+</div><h3 style="color:var(--ac)">Reauditoría</h3><p>Volvemos para confirmar que todo quedó correctamente cerrado y documentado.</p></div>
   </div>
 </div></section>
 
 <section><div class="wrap reveal"><div class="band">
-  <h2 style="margin-bottom:10px">¿Sabes por dónde te podrían atacar?</h2>
-  <p style="color:var(--mut);max-width:520px;margin:0 auto 26px">Nosotros sí. Solicita una auditoría y descúbrelo antes de que lo haga otro.</p>
-  <a href="#contacto" class="btn">Solicitar auditoría</a>
+  <h2>¿Sabes por dónde te podrían atacar?</h2>
+  <p>Nosotros sí. Solicita una auditoría y descúbrelo antes de que lo haga alguien malintencionado.</p>
+  <a href="#contacto" class="btn">Solicitar auditoría gratuita</a>
 </div></div></section>
 
-<section id="contacto" style="background:linear-gradient(180deg,transparent,rgba(10,16,24,.5))"><div class="wrap reveal"><div class="contact">
+<section id="contacto" style="background:linear-gradient(180deg,transparent,rgba(9,16,25,.5))"><div class="wrap reveal"><div class="contact-grid">
   <div>
     <div class="kicker">// hablemos</div><h2>Cuéntanos tu caso</h2>
-    <p class="lead">Te respondemos en menos de 24 horas.</p>
-    <p style="font-family:var(--mono);margin-bottom:10px">📧 contacto@jamsec.cat</p>
-    <p style="font-family:var(--mono);margin-bottom:10px">📞 +34 930 00 00 00</p>
-    <p style="font-family:var(--mono)">📍 Barcelona</p>
+    <p style="color:var(--mut);margin-bottom:34px;font-size:1.02rem">Te respondemos en menos de 24 horas hábiles.</p>
+    <div class="info-row"><div class="info-ico">📧</div><span>contacto@jamsec.cat</span></div>
+    <div class="info-row"><div class="info-ico">📞</div><span>+34 930 00 00 00</span></div>
+    <div class="info-row"><div class="info-ico">📍</div><span>Barcelona, España</span></div>
+    <div class="info-row"><div class="info-ico">🕐</div><span>L-V 9:00–18:00 · SOC 24/7</span></div>
   </div>
   <form onsubmit="return false">
     <div class="field"><label>nombre</label><input placeholder="Tu nombre"></div>
     <div class="field"><label>email</label><input placeholder="tucorreo@empresa.com"></div>
+    <div class="field"><label>empresa</label><input placeholder="Nombre de tu empresa"></div>
     <div class="field"><label>mensaje</label><textarea rows="4" placeholder="¿En qué podemos ayudarte?"></textarea></div>
-    <button class="btn" type="submit">Enviar &gt;</button>
+    <button class="btn" type="submit" style="width:100%;padding:14px;font-size:.98rem">Enviar mensaje →</button>
   </form>
 </div></div></section>
 
-<footer><div class="wrap"><div class="fgrid">
-  <div class="logo"><span class="sq"></span> JAM<span>SEC</span></div>
-  <div style="font-family:var(--mono);font-size:.82rem">© 2026 JAMSEC · jamsec.cat</div>
-  <div>Aviso legal · Privacidad</div>
-</div></div></footer>
+<footer><div class="wrap">
+  <div class="fgrid">
+    <div class="fcol">
+      <div class="logo" style="margin-bottom:16px"><span class="sq"></span> JAM<span style="color:var(--ac)">SEC</span></div>
+      <p style="color:var(--mut);font-size:.9rem;max-width:270px;line-height:1.65">Consultora de ciberseguridad ofensiva y defensiva con SOC propio operativo 24/7.</p>
+    </div>
+    <div class="fcol"><h4>// servicios</h4>
+      <a href="#servicios">Auditoría de intrusión</a>
+      <a href="#soc">Monitorización SOC</a>
+      <a href="#servicios">Respuesta a incidentes</a>
+      <a href="#servicios">Hardening</a>
+    </div>
+    <div class="fcol"><h4>// empresa</h4>
+      <a href="#metodo">Metodología</a>
+      <a href="#contacto">Contacto</a>
+      <a href="#">Blog técnico</a>
+      <a href="#">Casos de éxito</a>
+    </div>
+    <div class="fcol"><h4>// legal</h4>
+      <a href="#">Aviso legal</a>
+      <a href="#">Privacidad</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+  <div class="fbar">
+    <span>© 2026 JAMSEC S.L. · jamsec.cat</span>
+    <div class="socials">
+      <a class="soc-btn" href="#" title="LinkedIn"><svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452H17.21v-5.569c0-1.328-.026-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.984V9h3.096v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a1.787 1.787 0 01-1.79-1.795A1.79 1.79 0 015.337 3.85a1.79 1.79 0 011.793 1.788 1.787 1.787 0 01-1.793 1.795zm1.55 13.019H3.784V9h3.103v11.452z"/></svg></a>
+      <a class="soc-btn" href="#" title="GitHub"><svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+      <a class="soc-btn" href="#" title="X"><svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    </div>
+  </div>
+</div></footer>
 
 <script>
 const hdr=document.getElementById('hdr');
 addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>20));
+
 const words=['atacante','ransomware','intruso','phishing'];let wi=0,ci=0,del=false;
 const te=document.getElementById('type');
 function tick(){const w=words[wi];te.textContent=del?w.slice(0,ci--):w.slice(0,ci++);
-  if(!del&&ci===w.length+1){del=true;setTimeout(tick,1400);return;}
+  if(!del&&ci===w.length+1){del=true;setTimeout(tick,1600);return;}
   if(del&&ci===0){del=false;wi=(wi+1)%words.length;}
-  setTimeout(tick,del?55:110);}tick();
-const tl=[['p','$ ','nmap -sV 172.20.17.230'],['d','','Starting Nmap 7.95 ...'],
-['c','','21/tcp  open  ftp     vsftpd 3.0.5'],['c','','80/tcp  open  http    Apache 2.4'],
-['c','','2222/tcp open ssh     OpenSSH'],['w','[!] ','SQL injection detectada en /login.php'],
-['w','[!] ','FTP anonimo: credenciales expuestas'],['p','$ ','suricata -i eth0  # IDS activo'],
-['d','','rules loaded: 66218'],['c','','>> SOC monitorizando - 7 agentes online']];
+  setTimeout(tick,del?50:105);}tick();
+
+const tl=[['p','$ ','nmap -sV -p- 172.20.17.230 --open'],['d','','Starting Nmap 7.95 ...'],
+['c','','21/tcp  open  ftp     vsFTPd 3.0.5'],['c','','80/tcp  open  http    Apache/2.4.67'],
+['c','','2222/tcp open ssh    OpenSSH 10.0p2'],
+['e','[CRIT] ','SQL injection en /login.php — CVSS 9.8'],
+['w','[WARN] ','FTP anónimo: credenciales en texto claro'],
+['p','$ ','wazuh-agent status && suricata --status'],
+['d','','7 agentes online · 66218 reglas cargadas'],
+['c','','>> JAMSEC SOC · 0 incidentes abiertos']];
 const term=document.getElementById('term');
-tl.forEach((l,i)=>{const d=document.createElement('div');d.className='ln';d.style.animationDelay=(0.5+i*0.45)+'s';
-  d.innerHTML='<span class="'+l[0]+'">'+l[1]+'</span><span class="'+(l[0]==='p'?'':l[0])+'">'+l[2]+'</span>';term.appendChild(d);});
+tl.forEach((l,i)=>{const d=document.createElement('div');d.className='ln';d.style.animationDelay=(0.5+i*0.42)+'s';
+  d.innerHTML='<span class="'+l[0]+'">'+l[1]+'</span><span class="d">'+l[2]+'</span>';term.appendChild(d);});
+
+const tevts=['Escaneo nmap en 172.20.17.0/24','Intento XSS en portal de clientes','Fuerza bruta SSH bloqueada (fail2ban)','Regla ET SCAN Suricata activada','Backup nocturno verificado OK','Agente reconectado (jamsec-web)','Login admin desde nueva IP','Alerta: port scan origen desconocido','Wazuh syscheck: cambio en /etc detectado','Consulta SQL sospechosa interceptada'];
+const tk=document.getElementById('tk');
+const tItems=[...tevts,...tevts].map(t=>`<span><b class="tick-lbl">SOC</b>${t}</span>`).join('');
+tk.innerHTML=tItems+tItems;
+
+const toolList=['Nmap','Burp Suite','Metasploit','Wazuh','Suricata','SQLMap','Hydra','Nessus','Wireshark','OpenVAS','Nikto','Gobuster','CrackMapExec','Responder','BloodHound','Shodan'];
+const toolsEl=document.getElementById('tools');
+const tInner=[...toolList,...toolList].map(t=>`<div class="tool-badge"><span class="tool-dot"></span>${t}</div>`).join('');
+toolsEl.innerHTML=tInner+tInner;
+
 const evs=[['12:04:18','Escaneo de puertos detectado','wn','Suricata'],
 ['12:05:02','Fuerza bruta SSH bloqueada','ok','fail2ban'],
-['12:06:44','Intento de inyeccion SQL','cr','WAF'],
+['12:06:44','Inyección SQL interceptada','cr','WAF'],
 ['12:08:10','Agente reconectado (apex-web)','ok','Wazuh'],
-['12:09:55','Backup verificado','ok','SOC'],
-['12:11:30','Login correcto (admin)','ok','auth']];
+['12:09:55','Backup verificado con éxito','ok','SOC'],
+['12:11:30','Login correcto — admin','ok','auth'],
+['12:13:05','Alerta ET SCAN activada','wn','Suricata']];
 const feed=document.getElementById('feed');
 function row(e){const d=document.createElement('div');d.className='ev';
   d.innerHTML='<span class="t">'+e[0]+'</span><span class="m">'+e[1]+'</span><span class="tag '+e[2]+'">'+e[3]+'</span>';
@@ -241,10 +333,11 @@ function row(e){const d=document.createElement('div');d.className='ev';
 evs.forEach(row);let k=0;
 setInterval(()=>{const base=evs[k%evs.length].slice();const t=new Date();
   base[0]=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');
-  row(base);k++;},3500);
+  row(base);k++;},3200);
+
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');
   e.target.querySelectorAll('.count').forEach(c=>{const to=+c.dataset.to,pre=c.dataset.prefix||'',suf=c.dataset.suffix||'';
-    let n=0;const st=Math.max(1,to/40);const iv=setInterval(()=>{n+=st;if(n>=to){n=to;clearInterval(iv);}c.innerHTML=pre+Math.floor(n)+suf;},30);});
+    let n=0;const st=Math.max(.4,to/55);const iv=setInterval(()=>{n+=st;if(n>=to){n=to;clearInterval(iv);}c.innerHTML=pre+Math.floor(n)+suf;},24);});
   io.unobserve(e.target);}}),{threshold:.15});
 document.querySelectorAll('.reveal').forEach(r=>io.observe(r));
 document.querySelectorAll('.card').forEach(c=>c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();
